@@ -20,13 +20,13 @@ DWORD WINAPI MarkerThread(LPVOID param) {
 
     while (true) {
         int index = rand() % size;   // случайный индекс от 0 до size-1
-        if (array[index] == 0) {    // если ячейка свободна
+        if (array[index] == 0) {    
             Sleep(5);
             array[index] = data->getId();
             data->addMarkedIndex(index);
             Sleep(5);
         }
-        else {   // если ячейка занята другим потоком
+        else {  
             {
                 std::lock_guard<std::mutex> lock(consoleMutex);
                 std::cout << "Поток #" << data->getId()
@@ -34,9 +34,9 @@ DWORD WINAPI MarkerThread(LPVOID param) {
                     << ". Помечено: " << data->getMarkedIndexes().size() << std::endl;
             }
 
-            SetEvent(data->getPauseEvent());    // пауза + сигнал main потоку что застрял
-            WaitForSingleObject(data->getResumeEvent(), INFINITE);   // ожидаем указаний что делать
-                                                                       // потом когда все потоки застрянут, один из них будет завершен, остальным дана команда продолжать
+            SetEvent(data->getPauseEvent());    
+            WaitForSingleObject(data->getResumeEvent(), INFINITE);  
+                                                                       
             if (data->shouldTerminate()) {
                 break;
             }
